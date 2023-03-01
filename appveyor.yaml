@@ -1,0 +1,26 @@
+version: 1.0.{build}
+image: Visual Studio 2022
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  version_prefix: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+skip_commits:
+  files:
+    - '**/*.md'
+    - '*.txt'
+    - appveyor.yml
+    - '.gitignor'
+before_build:
+- cmd: nuget restore
+build:
+  publish_nuget: true
+  verbosity: minimal
+deploy:
+- provider: NuGet
+  api_key:
+    secure: NhW9k5KblkL3HQOYebQ7HCWcgVMGYU4zZWsyHnfEwUpIRoNm5ZdOPlyM9S5K3Gdq
