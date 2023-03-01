@@ -4,19 +4,45 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Company>RC-Art Solutions</Company>
+    <Authors>Ruemmler, Elias</Authors>
+    <Description>Library to handle physical values, dimensions and units.</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright>Copyright © 2023 RC-Art Solutions (Ruemmler, Elias)</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/100prznt/Rca.Physical.If97</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>water-properties; if97; iapws-if97</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Rca.Physical" Version="1.0.34" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Rca.Physical.If97.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dependencies\SEUIF97\x64\libseuif97.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
-    <None Update="Dependencies\SEUIF97\x86\libseuif97.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>  
+  
+  <ItemGroup>
     <None Update="Dependencies\x64\libseuif97.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
