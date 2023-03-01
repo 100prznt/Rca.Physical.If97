@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rca.Physical.If97", "Rca.Physical.If97\Rca.Physical.If97.csproj", "{AAC9DAF6-AF07-4DC6-A390-E28E855D388A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rca.Physical.If97.Tests", "Rca.Physical.If97.Tests\Rca.Physical.If97.Tests.csproj", "{BEFF0F33-08F1-4544-AB95-F5786D0F4D95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAC9DAF6-AF07-4DC6-A390-E28E855D388A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC9DAF6-AF07-4DC6-A390-E28E855D388A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC9DAF6-AF07-4DC6-A390-E28E855D388A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC9DAF6-AF07-4DC6-A390-E28E855D388A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEFF0F33-08F1-4544-AB95-F5786D0F4D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEFF0F33-08F1-4544-AB95-F5786D0F4D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEFF0F33-08F1-4544-AB95-F5786D0F4D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEFF0F33-08F1-4544-AB95-F5786D0F4D95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {013D6399-207F-4A53-90B1-5240B79FB49B}
+	EndGlobalSection
+EndGlobal
