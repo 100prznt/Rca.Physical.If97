@@ -1,4 +1,4 @@
-﻿using Rca.Physical.Helpers;
+/*using Rca.Physical.Helpers;
 using Rca.Physical.If97.SeuIf97;
 using System;
 using System.Collections.Generic;
@@ -91,3 +91,4 @@ namespace Rca.Physical.Calculators
 
     }
 }
+*/
