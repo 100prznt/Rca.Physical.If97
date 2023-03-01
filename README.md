@@ -1,4 +1,4 @@
-[![Bulid](https://img.shields.io/appveyor/ci/100prznt/rca-physical-if97.svg?logo=appveyor&style=popout-square)](https://ci.appveyor.com/project/100prznt/rca-physical-if97)   [![Current version](https://img.shields.io/nuget/v/Rca.Physical.If97.svg?logo=nuget&logoColor=%23ef8b00&style=popout-square)](https://www.nuget.org/packages/Rca.Physical.If97/)   [![Code size](https://img.shields.io/github/languages/code-size/100prznt/Rca.Physical.If97.svg?logo=github&style=popout-square)](#) 
+[![Bulid](https://img.shields.io/appveyor/ci/100prznt/rca-physical-if97.svg?logo=appveyor&style=popout-square)](https://ci.appveyor.com/project/100prznt/rca-physical-if97)   [![Current version](https://img.shields.io/nuget/v/Rca.Physical.If97.svg?logo=nuget&logoColor=%23ef8b00&style=popout-square)](https://www.nuget.org/packages/Rca.Physical.If97/)   [![Code size](https://img.shields.io/github/languages/code-size/100prznt/Rca.Physical.If97.svg?logo=github&style=popout-square)](#)   [![NuGet](https://img.shields.io/nuget/dt/Rca.Physical.If97.svg?logo=nuget&logoColor=%23ef8b00&style=popout-square)](https://www.nuget.org/packages/Rca.Physical.If97/)
 
 # Rca.Physical.If97
  
