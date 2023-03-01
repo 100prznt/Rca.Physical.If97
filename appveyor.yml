@@ -14,7 +14,7 @@ skip_commits:
     - '**/*.md'
     - '*.txt'
     - appveyor.yml
-    - '.gitignor'
+    - '.gitignore'
 before_build:
 - cmd: nuget restore
 build:
