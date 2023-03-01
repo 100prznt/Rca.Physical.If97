@@ -9,7 +9,7 @@ Property library for water and steam according to the industrial formulation IAP
 ## Credits
 This library is made possible by contributions from:
 * [Elias Rümmler](http://www.100prznt.de) ([@rmmlr](https://github.com/rmmlr)) - core contributor
-* [Cheng Maohua] ([@thermalogic](https://github.com/thermalogic)) - IAPWS-IF97 High-speed Shared Library [SEUIF97](https://github.com/thermalogic/SEUIF97)
+* Cheng Maohua ([@thermalogic](https://github.com/thermalogic)) - IAPWS-IF97 High-speed Shared Library [SEUIF97](https://github.com/thermalogic/SEUIF97)
 
 ## License
 Rca.Physical.If97 is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to [LICENSE](https://github.com/100prznt/Rca.Physical.If97/blob/master/LICENSE) for more information.
