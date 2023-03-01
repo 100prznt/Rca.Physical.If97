@@ -17,9 +17,5 @@ Rca.Physical.If97 is licensed under [MIT](http://www.opensource.org/licenses/mit
 ## Contributions
 Contributions are welcome. Fork this repository and send a pull request if you have something useful to add.
 
-
-[![Bulid](https://img.shields.io/appveyor/ci/100prznt/rca-physical-if97.svg?logo=appveyor&style=popout-square)](https://ci.appveyor.com/project/100prznt/rca-physical-if97)
-
-
 ## Related Projects
 * [Rca.Physical](https://github.com/100prznt/Rca.Physical) - Library to handle physical values, dimensions and units.
