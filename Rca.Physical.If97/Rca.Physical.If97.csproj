@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <Company>RC-Art Solutions</Company>
     <Authors>Ruemmler, Elias</Authors>
-    <Description>Library to handle physical values, dimensions and units.</Description>
+    <Description>Property library for water and steam according to the industrial formulation IAPWS-IF97.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Copyright>Copyright © 2023 RC-Art Solutions (Ruemmler, Elias)</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/100prznt/Rca.Physical.If97</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>water-properties; if97; iapws-if97</PackageTags>
+    <PackageTags>water-properties; iapws-if97; thermodynamics</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyVersion>1.0.1</AssemblyVersion>
