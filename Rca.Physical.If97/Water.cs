@@ -16,14 +16,18 @@ namespace Rca.Physical.If97
         /// Range of validity of IAPWS-IF97 - Temperature
         /// see also: https://web1.hszg.de/thermo_fpc/range_of_validity/range_of_validity_water.htm?choose_fluid=1&
         /// </summary>
-        private static PhysicalRange validTemperatureRange = new(0, 800, PhysicalUnits.Celsius);
+        private static readonly PhysicalRange validTemperatureRange = new(0, 800, PhysicalUnits.Celsius);
 
         /// <summary>
         /// Range of validity of IAPWS-IF97 - Pressure
         /// see also: https://web1.hszg.de/thermo_fpc/range_of_validity/range_of_validity_water.htm?choose_fluid=1&
         /// </summary>
-        private static PhysicalRange validPressureRange = new(0.00611, 1000, PhysicalUnits.Bar);
+        private static readonly PhysicalRange validPressureRange = new(0.00611, 1000, PhysicalUnits.Bar);
 
+
+        private delegate double SeuIf97FunctionDelegate(double parameter1, double parameter2, Properties property);
+
+        #region Members
         /// <summary>
         /// Input variables have changed, recalculation required.
         /// </summary>
@@ -32,7 +36,7 @@ namespace Rca.Physical.If97
         /// <summary>
         /// Handler to hold the current SeuIf97 calculation function
         /// </summary>
-        private SeuIf97FunctionDelegate m_SeuIf97Function_Handler;
+        private SeuIf97FunctionDelegate? m_SeuIf97Function_Handler;
 
         /// <summary>
         /// First parameter for current SeuIf97 calculation function 
@@ -43,8 +47,6 @@ namespace Rca.Physical.If97
         /// Second parameter for current SeuIf97 calculation function 
         /// </summary>
         private double m_Parameter2;
-
-
 
         /// <summary>
         /// Pressure p in [MPa]
@@ -132,7 +134,7 @@ namespace Rca.Physical.If97
         private double m_Region;
 
         /// <summary>
-        /// Isobaric volume expansion coefficient  ec in [1/K] 
+        /// Isobaric volume expansion coefficient ec in [1/K] 
         /// </summary>
         private double m_IsobaricVolumeExpansionCoefficient;
 
@@ -196,13 +198,19 @@ namespace Rca.Physical.If97
         /// </summary>
         private double m_SurfaceTension;
 
+        #endregion Members
+
+        #region Properties
 
         public PhysicalValue Pressure
         {
             get
             {
                 if (m_CalculationRequired)
+                {
                     m_Pressure = Calculate(Properties.Pressure);
+                    CheckPressure(new(m_Pressure, PhysicalUnits.Megapascal));
+                }
                 return new(m_Pressure, PhysicalUnits.Megapascal);
             }
         }
@@ -212,7 +220,10 @@ namespace Rca.Physical.If97
             get
             {
                 if (m_CalculationRequired)
+                {
                     m_Temperature = Calculate(Properties.Temperature);
+                    CheckTemperature(new(m_Temperature, PhysicalUnits.Celsius));
+                }
                 return new(m_Temperature, PhysicalUnits.Celsius);
             }
         }
@@ -226,6 +237,15 @@ namespace Rca.Physical.If97
                 return new(m_Density, PhysicalUnits.KilogramPerCubicMetre);
             }
         }
+        public PhysicalValue SurfaceTension
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_SurfaceTension = Calculate(Properties.SurfaceTension);
+                return new(m_SurfaceTension, PhysicalUnits.MillinewtonPerMetre);
+            }
+        }
 
         public PhysicalValue SpecificVolume
         {
@@ -233,7 +253,7 @@ namespace Rca.Physical.If97
             {
                 if (m_CalculationRequired)
                     m_Volume = Calculate(Properties.Volume);
-                return new(m_Volume, PhysicalUnits.CubicmetrePerKilogram);
+                return new(m_Volume, PhysicalUnits.CubicMetrePerKilogram);
             }
         }
 
@@ -267,20 +287,130 @@ namespace Rca.Physical.If97
             }
         }
 
+        public double SteamQuality
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_SteamQuality = Calculate(Properties.SteamQuality);
+                return m_SteamQuality;
+            }
+        }
+
+        public double PrandtlNumber
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_PrandtlNumber = Calculate(Properties.PrandtlNumber);
+                return m_PrandtlNumber;
+            }
+        }
+
+        public double CompressibilityFactor
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_CompressibilityFactor = Calculate(Properties.CompressibilityFactor);
+                return m_CompressibilityFactor;
+            }
+        }
+
+        public double IsentropicExponent
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_IsentropicExponent = Calculate(Properties.IsentropicExponent);
+                return m_IsentropicExponent;
+            }
+        }
+
+        public PhysicalValue SpeedOfSound
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_SpeedOfSound = Calculate(Properties.SpeedOfSound);
+                return new(m_SpeedOfSound, PhysicalUnits.MetrePerSecond);
+            }
+        }
+
+        public PhysicalValue SpecificExergy
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_Exergy = Calculate(Properties.Exergy);
+                return new(m_Exergy, PhysicalUnits.KilojoulePerKilogram);
+            }
+        }
+
+        public PhysicalValue SpecificEnthalpy
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_Enthalpy = Calculate(Properties.Enthalpy);
+                return new(m_Enthalpy, PhysicalUnits.KilojoulePerKilogram);
+            }
+        }
+
+        public PhysicalValue SpecificInternalEnergy
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_InternalEnergy = Calculate(Properties.InternalEnergy);
+                return new(m_InternalEnergy, PhysicalUnits.KilojoulePerKilogram);
+            }
+        }
+
+        public PhysicalValue SpecificHelmholtzFreeEnergy
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_HelmholtzFreeEnergy = Calculate(Properties.HelmholtzFreeEnergy);
+                return new(m_HelmholtzFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
+            }
+        }
+
+        public PhysicalValue SpecificGibbsFreeEnergy
+        {
+            get
+            {
+                if (m_CalculationRequired)
+                    m_GibbsFreeEnergy = Calculate(Properties.GibbsFreeEnergy);
+                return new(m_GibbsFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
+            }
+        }
+
+        #endregion Properties
+
+        #region Constructor
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <exception cref="System.ComponentModel.Win32Exception">Can not set DLL directory</exception>
+        /// <exception cref="AggregateException">Can not get assembly location</exception>
         public Water()
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            path = Path.Combine(path, "Dependencies", Environment.Is64BitProcess ? "x64" : "x86");
-            if (!SetDllDirectory(path))
-                throw new System.ComponentModel.Win32Exception();
+            if (path is not null)
+            {
+                path = Path.Combine(path, "Dependencies", Environment.Is64BitProcess ? "x64" : "x86");
+                if (!SetDllDirectory(path))
+                    throw new System.ComponentModel.Win32Exception("Can not set DLL directory");
+            }
+            else
+                throw new AggregateException("Can not get assembly location");
         }
+        #endregion Constructor
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool SetDllDirectory(string path);
-
-        private delegate double SeuIf97FunctionDelegate(double parameter1, double parameter2, Properties property);
-
-
+        #region Public services
         /// <summary>
         /// Update the water condition, with new values for pressure and temperature.
         /// </summary>
@@ -288,8 +418,11 @@ namespace Rca.Physical.If97
         /// <param name="temperature">New temperature value</param>
         public void UpdatePT(PhysicalValue pressure, PhysicalValue temperature)
         {
-            m_Pressure = UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal));
-            m_Temperature = UpdateParameter(2, temperature.ValueAs(PhysicalUnits.Celsius));
+            CheckPressure(pressure);
+            CheckTemperature(temperature);
+
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
+            UpdateParameter(2, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seupt;
         }
@@ -301,8 +434,10 @@ namespace Rca.Physical.If97
         /// <param name="specificVolume">New specific volume</param>
         public void UpdatePV(PhysicalValue pressure, PhysicalValue specificVolume)
         {
-            m_Pressure = UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal));
-            m_Volume = UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicmetrePerKilogram));
+            CheckPressure(pressure);
+
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
+            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), ref m_Volume);
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seupv;
         }
@@ -314,13 +449,79 @@ namespace Rca.Physical.If97
         /// <param name="specificVolume">New specific volume</param>
         public void UpdateTV(PhysicalValue temperature, PhysicalValue specificVolume)
         {
-            m_Temperature = UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius));
-            m_Volume = UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicmetrePerKilogram));
+            CheckTemperature(temperature);
+
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
+            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), ref m_Volume);
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seutv;
         }
 
-        private double UpdateParameter(int parameterNumber, double value)
+        /// <summary>
+        /// Update the water condition, with new values for temperature and steam quality.
+        /// </summary>
+        /// <param name="temperature">New temperature value</param>
+        /// <param name="steamQuality">New steam quality value</param>
+        public void UpdateTX(PhysicalValue temperature, double steamQuality)
+        {
+            CheckTemperature(temperature);
+
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
+            UpdateParameter(2, steamQuality, ref m_SteamQuality);
+
+            m_SeuIf97Function_Handler = SeuIf97Wrapper.seutx;
+        }
+
+        /// <summary>
+        /// Update the water condition, with new values for pressure and steam quality.
+        /// </summary>
+        /// <param name="pressure">New pressure value</param>
+        /// <param name="steamQuality">New steam quality value</param>
+        public void UpdatePX(PhysicalValue pressure, double steamQuality)
+        {
+            CheckPressure(pressure);
+
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
+            UpdateParameter(2, steamQuality, ref m_SteamQuality);
+
+            m_SeuIf97Function_Handler = SeuIf97Wrapper.seupx;
+        }
+
+        /// <summary>
+        /// Update the water condition, with new values for pressure and specific enthalpy.
+        /// </summary>
+        /// <param name="pressure">New pressure value</param>
+        /// <param name="enthalpy">New specific enthalpy value</param>
+        public void UpdatePH(PhysicalValue pressure, PhysicalValue enthalpy)
+        {
+            CheckPressure(pressure);
+
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
+            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), ref m_Enthalpy);
+
+            m_SeuIf97Function_Handler = SeuIf97Wrapper.seuph;
+        }
+
+        /// <summary>
+        /// Update the water condition, with new values for temperature and specific enthalpy.
+        /// </summary>
+        /// <param name="temperature">New temperature value</param>
+        /// <param name="enthalpy">New specific enthalpy value</param>
+        public void UpdateTH(PhysicalValue temperature, PhysicalValue enthalpy)
+        {
+            CheckTemperature(temperature);
+
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
+            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), ref m_Enthalpy);
+
+            m_SeuIf97Function_Handler = SeuIf97Wrapper.seuth;
+        }
+
+        #endregion Public services
+
+        #region Private services
+
+        private void UpdateParameter(int parameterNumber, double value, ref double parameterMember)
         {
             switch (parameterNumber)
             {
@@ -334,22 +535,35 @@ namespace Rca.Physical.If97
                     throw new ArgumentOutOfRangeException($"Only parameter 1 and 2 are available. Parameter {parameterNumber} does not exist.");
             }
 
-            return value;
+            parameterMember = value;
         }
 
         private double Calculate(Properties property)
         {
-            m_CalculationRequired = true;
-            return m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, property);
+            if (m_SeuIf97Function_Handler is not null)
+            {
+                m_CalculationRequired = true;
+                return m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, property);
+            }
+            else
+                throw new ArgumentNullException(nameof(m_SeuIf97Function_Handler), "Before the calculation, a parameter update is required.");
         }
 
-        private static void CheckPressureAndTemperature(PhysicalValue pressure, PhysicalValue temperature)
+        private void CheckPressure(PhysicalValue pressure)
         {
             if (!validPressureRange.InRange(pressure))
-                throw new ArgumentOutOfRangeException($"Passed pressure value ({pressure}) is out of the valid range for IAPWS-IF97 model ({validPressureRange})");
-
-            if (!validTemperatureRange.InRange(temperature))
-                throw new ArgumentOutOfRangeException($"Passed pressure value ({temperature}) is out of the valid range for IAPWS-IF97 model ({validTemperatureRange})");
+                throw new ArgumentOutOfRangeException($"Passed pressure value ({pressure}) is out of the valid range for IAPWS-IF97 calculation ({validPressureRange})");
         }
+
+        private void CheckTemperature(PhysicalValue temperature)
+        {
+            if (!validTemperatureRange.InRange(temperature))
+                throw new ArgumentOutOfRangeException($"Passed pressure value ({temperature}) is out of the valid range for IAPWS-IF97 calculation ({validTemperatureRange})");
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool SetDllDirectory(string path);
+
+        #endregion Private services
     }
 }
