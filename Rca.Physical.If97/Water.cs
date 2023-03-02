@@ -29,9 +29,9 @@ namespace Rca.Physical.If97
 
         #region Members
         /// <summary>
-        /// Input variables have changed, recalculation required.
+        /// Input variables have not changed, calculation already performed
         /// </summary>
-        private bool m_CalculationRequired;
+        private bool m_AlreadyCalculated;
 
         /// <summary>
         /// Handler to hold the current SeuIf97 calculation function
@@ -206,7 +206,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                 {
                     m_Pressure = Calculate(Properties.Pressure);
                     CheckPressure(new(m_Pressure, PhysicalUnits.Megapascal));
@@ -219,7 +219,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                 {
                     m_Temperature = Calculate(Properties.Temperature);
                     CheckTemperature(new(m_Temperature, PhysicalUnits.Celsius));
@@ -232,7 +232,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_Density = Calculate(Properties.Density);
                 return new(m_Density, PhysicalUnits.KilogramPerCubicMetre);
             }
@@ -241,7 +241,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_SurfaceTension = Calculate(Properties.SurfaceTension);
                 return new(m_SurfaceTension, PhysicalUnits.MillinewtonPerMetre);
             }
@@ -251,17 +251,20 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_Volume = Calculate(Properties.Volume);
                 return new(m_Volume, PhysicalUnits.CubicMetrePerKilogram);
             }
         }
 
+        /// <summary>
+        /// Kinematic viscosity in [m^2/s]
+        /// </summary>
         public PhysicalValue DynamicViscosity
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_DynamicViscosity = Calculate(Properties.DynamicViscosity);
                 return new(m_DynamicViscosity, PhysicalUnits.KilogramPerMetreSecond);
             }
@@ -271,7 +274,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_KinematicViscosity = Calculate(Properties.KinematicViscosity);
                 return new(m_KinematicViscosity, PhysicalUnits.SquareMetrePerSecond);
             }
@@ -281,7 +284,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_Region = Calculate(Properties.Region);
                 return (int)m_Region;
             }
@@ -291,7 +294,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_SteamQuality = Calculate(Properties.SteamQuality);
                 return m_SteamQuality;
             }
@@ -301,7 +304,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_PrandtlNumber = Calculate(Properties.PrandtlNumber);
                 return m_PrandtlNumber;
             }
@@ -311,7 +314,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_CompressibilityFactor = Calculate(Properties.CompressibilityFactor);
                 return m_CompressibilityFactor;
             }
@@ -321,7 +324,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_IsentropicExponent = Calculate(Properties.IsentropicExponent);
                 return m_IsentropicExponent;
             }
@@ -331,7 +334,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_SpeedOfSound = Calculate(Properties.SpeedOfSound);
                 return new(m_SpeedOfSound, PhysicalUnits.MetrePerSecond);
             }
@@ -341,7 +344,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_Exergy = Calculate(Properties.Exergy);
                 return new(m_Exergy, PhysicalUnits.KilojoulePerKilogram);
             }
@@ -351,7 +354,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_Enthalpy = Calculate(Properties.Enthalpy);
                 return new(m_Enthalpy, PhysicalUnits.KilojoulePerKilogram);
             }
@@ -361,7 +364,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_InternalEnergy = Calculate(Properties.InternalEnergy);
                 return new(m_InternalEnergy, PhysicalUnits.KilojoulePerKilogram);
             }
@@ -371,7 +374,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_HelmholtzFreeEnergy = Calculate(Properties.HelmholtzFreeEnergy);
                 return new(m_HelmholtzFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
             }
@@ -381,7 +384,7 @@ namespace Rca.Physical.If97
         {
             get
             {
-                if (m_CalculationRequired)
+                if (!m_AlreadyCalculated)
                     m_GibbsFreeEnergy = Calculate(Properties.GibbsFreeEnergy);
                 return new(m_GibbsFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
             }
@@ -411,6 +414,17 @@ namespace Rca.Physical.If97
         #endregion Constructor
 
         #region Public services
+
+        /// <summary>
+        /// Update the water condition, with new value for temperature.
+        /// The pressure is set to standard atmosphere (1 atm).
+        /// </summary>
+        /// <param name="temperature">New temperature value</param>
+        public void UpdateT(PhysicalValue temperature)
+        {
+            UpdatePT(temperature, Rca.Physical.Helpers.Pressure.FromStandardAtmosphere(1));
+        }
+
         /// <summary>
         /// Update the water condition, with new values for pressure and temperature.
         /// </summary>
@@ -511,6 +525,8 @@ namespace Rca.Physical.If97
         {
             CheckTemperature(temperature);
 
+            m_AlreadyCalculated = false;
+
             UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
             UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), ref m_Enthalpy);
 
@@ -542,8 +558,15 @@ namespace Rca.Physical.If97
         {
             if (m_SeuIf97Function_Handler is not null)
             {
-                m_CalculationRequired = true;
-                return m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, property);
+                var result = m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, property);
+
+                if (double.IsNormal(result))
+                {
+                    m_AlreadyCalculated = true;
+                    return result;
+                }
+                else
+                    throw new ArgumentException("Calculation returns with error, result value is: " + result);
             }
             else
                 throw new ArgumentNullException(nameof(m_SeuIf97Function_Handler), "Before the calculation, a parameter update is required.");

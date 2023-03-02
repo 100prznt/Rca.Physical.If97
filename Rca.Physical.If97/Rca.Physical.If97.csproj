@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rca.Physical" Version="1.0.42" />
+    <PackageReference Include="Rca.Physical" Version="1.0.43" />
   </ItemGroup>
   
   <ItemGroup>
