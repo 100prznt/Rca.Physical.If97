@@ -15,11 +15,11 @@ namespace Rca.Physical.If97
 
         public PhysicalUnits SeuIf97Unit { get; init; }
 
-        public Properties SeuIf97PropertyId { get; init; }
+        public SeuIf97Properties SeuIf97PropertyId { get; init; }
 
         public int ParameterNumber { get; set; }
 
-        public CalculationProperty(PhysicalUnits unit, Properties id)
+        public CalculationProperty(PhysicalUnits unit, SeuIf97Properties id)
         {
             SeuIf97Unit = unit;
             SeuIf97PropertyId = id;

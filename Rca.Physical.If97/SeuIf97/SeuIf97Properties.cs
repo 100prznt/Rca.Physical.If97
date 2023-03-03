@@ -10,7 +10,7 @@ namespace Rca.Physical.If97.SeuIf97
     /// <summary>
     /// Property IDs for the SEUIF97 library
     /// </summary>
-    internal enum Properties
+    internal enum SeuIf97Properties
     {
         NotDefined = -1,
         /// <summary>

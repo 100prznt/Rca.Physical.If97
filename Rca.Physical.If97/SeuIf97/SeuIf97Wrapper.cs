@@ -22,7 +22,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seupt(double pressure, double temperature, Properties pid);
+        internal static extern double seupt(double pressure, double temperature, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (p,h)
@@ -32,7 +32,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seuph(double pressure, double specEnthalpy, Properties pid);
+        internal static extern double seuph(double pressure, double specEnthalpy, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (p,s)
@@ -42,7 +42,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seups(double pressure, double specEntropy, Properties pid);
+        internal static extern double seups(double pressure, double specEntropy, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (p,v)
@@ -52,7 +52,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seupv(double pressure, double specVolume, Properties pid);
+        internal static extern double seupv(double pressure, double specVolume, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (t,h)
@@ -62,7 +62,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seuth(double temperature, double specEnthalpy, Properties pid);
+        internal static extern double seuth(double temperature, double specEnthalpy, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (t,s)
@@ -72,7 +72,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seuts(double temperature, double specEntropy, Properties pid);
+        internal static extern double seuts(double temperature, double specEntropy, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (t,v)
@@ -82,7 +82,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seutv(double temperature, double specVolume, Properties pid);
+        internal static extern double seutv(double temperature, double specVolume, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (h,s)
@@ -92,7 +92,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seuhs(double specEnthalpy, double specEntropy, Properties pid);
+        internal static extern double seuhs(double specEnthalpy, double specEntropy, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (p,x)
@@ -102,7 +102,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seupx(double pressure, double steamQuality, Properties pid);
+        internal static extern double seupx(double pressure, double steamQuality, SeuIf97Properties pid);
 
         /// <summary>
         /// Inputfunction (t,x)
@@ -112,7 +112,7 @@ namespace Rca.Physical.If97.SeuIf97
         /// <param name="pid">ID of the property to be calculated</param>
         /// <returns>Value of the property, specified with <paramref name="pid"/></returns>
         [DllImport("libseuif97.dll", CallingConvention = CallingConvention.StdCall)]
-        internal static extern double seutx(double temperature, double steamQuality, Properties pid);
+        internal static extern double seutx(double temperature, double steamQuality, SeuIf97Properties pid);
 
         /// <summary>
         /// Isentropic Enthalpy Drop

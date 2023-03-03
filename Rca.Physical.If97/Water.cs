@@ -26,10 +26,11 @@ namespace Rca.Physical.If97
         /// </summary>
         private static readonly PhysicalRange validPressureRange = new(0.00611, 1000, PhysicalUnits.Bar);
 
-
-        private delegate double SeuIf97FunctionDelegate(double parameter1, double parameter2, Properties property);
+        private delegate double SeuIf97FunctionDelegate(double parameter1, double parameter2, SeuIf97Properties property);
 
         #region Members
+
+        private static bool m_SeuIf97DllIsInitialized = false;
 
         private Dictionary<string, CalculationProperty> m_PropertyInfos;
 
@@ -179,50 +180,54 @@ namespace Rca.Physical.If97
         /// <exception cref="AggregateException">Can not get assembly location</exception>
         public Water()
         {
-            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            if (path is not null)
+            if (!m_SeuIf97DllIsInitialized)
             {
-                path = Path.Combine(path, "Dependencies", Environment.Is64BitProcess ? "x64" : "x86");
-                if (!SetDllDirectory(path))
-                    throw new System.ComponentModel.Win32Exception("Can not set DLL directory");
+                DllHelper.ExtractEmbeddedDlls("libseuif97.dll", Properties.Resources.libseuif97);
+
+                //var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                //if (path is not null)
+                //{
+                //    path = Path.Combine(path, "Dependencies", Environment.Is64BitProcess ? "x64" : "x86");
+                //    if (!SetDllDirectory(path))
+                //        throw new System.ComponentModel.Win32Exception("Can not set DLL directory");
+                //}
+                //else
+                //    throw new AggregateException("Can not get assembly location");
+
+
+
+                ////O N L Y   F O R   D E B U G I N G
+                //var logpath = @"D:/Temp/debuginfo_dllpath.txt";
+                //if (Directory.Exists(Path.GetDirectoryName(logpath)) & !File.Exists(logpath))
+                //{
+                //    using var sw = new StreamWriter(logpath);
+                //    sw.WriteLine($"SetDllDirectory({path})");
+                //}
+
             }
-            else
-                throw new AggregateException("Can not get assembly location");
-
-
-
-            //O N L Y   F O R   D E B U G I N G
-            var logpath = @"D:/Temp/debuginfo_dllpath.txt";
-            if (Directory.Exists(Path.GetDirectoryName(logpath)) & !File.Exists(logpath))
-            {
-                using var sw = new StreamWriter(logpath);
-                sw.WriteLine($"SetDllDirectory({path})");
-            }
-
-
 
             m_PropertyInfos = new Dictionary<string, CalculationProperty>()
             {
-                { nameof(Pressure),                    new(PhysicalUnits.Megapascal,             Properties.Pressure              )},
-                { nameof(Temperature),                 new(PhysicalUnits.Celsius,                Properties.Temperature           )},
-                { nameof(SaturationPressure),          new(PhysicalUnits.Megapascal,             Properties.NotDefined            )},
-                { nameof(SaturationTemperature),       new(PhysicalUnits.Celsius,                Properties.NotDefined            )},
-                { nameof(Density),                     new(PhysicalUnits.KilogramPerCubicMetre,  Properties.Density               )},
-                { nameof(SurfaceTension),              new(PhysicalUnits.MillinewtonPerMetre,    Properties.SurfaceTension        )},
-                { nameof(SpecificVolume),              new(PhysicalUnits.CubicMetrePerKilogram,  Properties.Volume                )},
-                { nameof(DynamicViscosity),            new(PhysicalUnits.KilogramPerMetreSecond, Properties.DynamicViscosity      )},
-                { nameof(KineticViscosity),            new(PhysicalUnits.SquareMetrePerSecond,   Properties.KinematicViscosity    )},
-                { nameof(Region),                      new(PhysicalUnits.None,                   Properties.Region                )},
-                { nameof(SteamQuality),                new(PhysicalUnits.None,                   Properties.SteamQuality          )},
-                { nameof(PrandtlNumber),               new(PhysicalUnits.None,                   Properties.PrandtlNumber         )},
-                { nameof(CompressibilityFactor),       new(PhysicalUnits.None,                   Properties.CompressibilityFactor )},
-                { nameof(IsentropicExponent),          new(PhysicalUnits.None,                   Properties.IsentropicExponent    )},
-                { nameof(SpeedOfSound),                new(PhysicalUnits.MetrePerSecond,         Properties.SpeedOfSound          )},
-                { nameof(SpecificExergy),              new(PhysicalUnits.KilojoulePerKilogram,   Properties.Exergy                )},
-                { nameof(SpecificEnthalpy),            new(PhysicalUnits.KilojoulePerKilogram,   Properties.Enthalpy              )},
-                { nameof(SpecificInternalEnergy),      new(PhysicalUnits.KilojoulePerKilogram,   Properties.InternalEnergy        )},
-                { nameof(SpecificHelmholtzFreeEnergy), new(PhysicalUnits.KilojoulePerKilogram,   Properties.HelmholtzFreeEnergy   )},
-                { nameof(SpecificGibbsFreeEnergy),     new(PhysicalUnits.KilojoulePerKilogram,   Properties.GibbsFreeEnergy       )}
+                { nameof(Pressure),                    new(PhysicalUnits.Megapascal,             SeuIf97Properties.Pressure              )},
+                { nameof(Temperature),                 new(PhysicalUnits.Celsius,                SeuIf97Properties.Temperature           )},
+                { nameof(SaturationPressure),          new(PhysicalUnits.Megapascal,             SeuIf97Properties.NotDefined            )},
+                { nameof(SaturationTemperature),       new(PhysicalUnits.Celsius,                SeuIf97Properties.NotDefined            )},
+                { nameof(Density),                     new(PhysicalUnits.KilogramPerCubicMetre,  SeuIf97Properties.Density               )},
+                { nameof(SurfaceTension),              new(PhysicalUnits.MillinewtonPerMetre,    SeuIf97Properties.SurfaceTension        )},
+                { nameof(SpecificVolume),              new(PhysicalUnits.CubicMetrePerKilogram,  SeuIf97Properties.Volume                )},
+                { nameof(DynamicViscosity),            new(PhysicalUnits.KilogramPerMetreSecond, SeuIf97Properties.DynamicViscosity      )},
+                { nameof(KineticViscosity),            new(PhysicalUnits.SquareMetrePerSecond,   SeuIf97Properties.KinematicViscosity    )},
+                { nameof(Region),                      new(PhysicalUnits.None,                   SeuIf97Properties.Region                )},
+                { nameof(SteamQuality),                new(PhysicalUnits.None,                   SeuIf97Properties.SteamQuality          )},
+                { nameof(PrandtlNumber),               new(PhysicalUnits.None,                   SeuIf97Properties.PrandtlNumber         )},
+                { nameof(CompressibilityFactor),       new(PhysicalUnits.None,                   SeuIf97Properties.CompressibilityFactor )},
+                { nameof(IsentropicExponent),          new(PhysicalUnits.None,                   SeuIf97Properties.IsentropicExponent    )},
+                { nameof(SpeedOfSound),                new(PhysicalUnits.MetrePerSecond,         SeuIf97Properties.SpeedOfSound          )},
+                { nameof(SpecificExergy),              new(PhysicalUnits.KilojoulePerKilogram,   SeuIf97Properties.Exergy                )},
+                { nameof(SpecificEnthalpy),            new(PhysicalUnits.KilojoulePerKilogram,   SeuIf97Properties.Enthalpy              )},
+                { nameof(SpecificInternalEnergy),      new(PhysicalUnits.KilojoulePerKilogram,   SeuIf97Properties.InternalEnergy        )},
+                { nameof(SpecificHelmholtzFreeEnergy), new(PhysicalUnits.KilojoulePerKilogram,   SeuIf97Properties.HelmholtzFreeEnergy   )},
+                { nameof(SpecificGibbsFreeEnergy),     new(PhysicalUnits.KilojoulePerKilogram,   SeuIf97Properties.GibbsFreeEnergy       )}
             };
         }
 
@@ -496,7 +501,7 @@ namespace Rca.Physical.If97
         private PhysicalValue CalculateSaturationPressure([CallerMemberName] string propertyName = "")
         {
             var temperature = Temperature.ValueAs(PhysicalUnits.Celsius);
-            var pressure = SeuIf97Wrapper.seutx(temperature, 1, Properties.Pressure);
+            var pressure = SeuIf97Wrapper.seutx(temperature, 1, SeuIf97Properties.Pressure);
 
             m_PropertyInfos[propertyName].Value = pressure;
             m_PropertyInfos[propertyName].IsCalculated = true;
@@ -507,7 +512,7 @@ namespace Rca.Physical.If97
         private PhysicalValue CalculateSaturationTemperature([CallerMemberName] string propertyName = "")
         {
             var pressure = Pressure.ValueAs(PhysicalUnits.Megapascal);
-            var temperature = SeuIf97Wrapper.seupx(pressure, 1, Properties.Temperature);
+            var temperature = SeuIf97Wrapper.seupx(pressure, 1, SeuIf97Properties.Temperature);
 
             m_PropertyInfos[propertyName].Value = temperature;
             m_PropertyInfos[propertyName].IsCalculated = true;
