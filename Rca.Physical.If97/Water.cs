@@ -1,9 +1,11 @@
 ﻿using Rca.Physical.Helpers;
 using Rca.Physical.If97.SeuIf97;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +30,8 @@ namespace Rca.Physical.If97
         private delegate double SeuIf97FunctionDelegate(double parameter1, double parameter2, Properties property);
 
         #region Members
-        /// <summary>
-        /// Input variables have not changed, calculation already performed
-        /// </summary>
-        private bool m_AlreadyCalculated;
+
+        private Dictionary<string, CalculationProperty> m_PropertyInfos;
 
         /// <summary>
         /// Handler to hold the current SeuIf97 calculation function
@@ -48,352 +48,130 @@ namespace Rca.Physical.If97
         /// </summary>
         private double m_Parameter2;
 
-        /// <summary>
-        /// Pressure p in [MPa]
-        /// </summary>
-        private double m_Pressure;
-
-        /// <summary>
-        /// Temperature t in [°C]
-        /// </summary>
-        private double m_Temperature;
-
-        /// <summary>
-        /// Destiny d in [kg/m^3]
-        /// </summary>
-        private double m_Density;
-
-        /// <summary>
-        /// Specific volume v in [m^3/kg]
-        /// </summary>
-        private double m_Volume;
-
-        /// <summary>
-        /// Specific enthalpy h in [kJ/kg]
-        /// </summary>
-        private double m_Enthalpy;
-
-        /// <summary>
-        /// Specific entropy s in [kJ/(kg·K)]
-        /// </summary>
-        private double m_Entropy;
-
-        /// <summary>
-        /// Specific exergy e in [kJ/kg]	
-        /// </summary>
-        private double m_Exergy;
-
-        /// <summary>
-        /// Specific internal energy u in [kJ/kg] 
-        /// </summary>
-        private double m_InternalEnergy;
-
-        /// <summary>
-        /// Specific isobaric heat capacity cp in [kJ/(kg·K)]
-        /// </summary>
-        private double m_IsobaricHeatCapacity;
-
-        /// <summary>
-        /// Specific isochoric heat capacity cv in [kJ/(kg·K)]
-        /// </summary>
-        private double m_IsochoricHeatCapacity;
-
-        /// <summary>
-        /// Speed of sound w in [m/s] 
-        /// </summary>
-        private double m_SpeedOfSound;
-
-        /// <summary>
-        /// Isentropic exponent ks
-        /// </summary>
-        private double m_IsentropicExponent;
-
-        /// <summary>
-        /// Specific Helmholtz free energy f in [kJ/kg] 
-        /// </summary>
-        private double m_HelmholtzFreeEnergy;
-
-        /// <summary>
-        /// Specific Gibbs free energy g in [kJ/kg]  
-        /// </summary>
-        private double m_GibbsFreeEnergy;
-
-        /// <summary>
-        /// CompressibilityFactor z
-        /// </summary>
-        private double m_CompressibilityFactor;
-
-        /// <summary>
-        /// SteamQuality x
-        /// </summary>
-        private double m_SteamQuality;
-
-        /// <summary>
-        /// IF97 Model-Region r 
-        /// </summary>
-        private double m_Region;
-
-        /// <summary>
-        /// Isobaric volume expansion coefficient ec in [1/K] 
-        /// </summary>
-        private double m_IsobaricVolumeExpansionCoefficient;
-
-        /// <summary>
-        /// Isothermal compressibility kt in [1/MPa] 
-        /// </summary>
-        private double m_IsothermalCompressibility;
-
-        /// <summary>
-        /// Partial derivative(dV/dT)p dvdt in [m3/(kg·K)]	
-        /// </summary>
-        private double m_PartialDerivative_dV_dT_p;
-
-        /// <summary>
-        /// Partial derivative(dV/dP)T dvdp in [m3/(kg·MPa)]
-        /// </summary>
-        private double m_PartialDerivative_dV_dP_T;
-
-        /// <summary>
-        /// Partial derivative(dP/dT)v dpdt in [MPa/K]  
-        /// </summary>
-        private double m_PartialDerivative_dP_dT_v;
-
-        /// <summary>
-        /// Isothermal Joule-Thomson coefficient  iJTC in [kJ/(kg·MPa)]
-        /// </summary>
-        private double m_IsothermalJouleThomsonCoefficient;
-
-        /// <summary>
-        /// Joule-Thomson coefficient JTC in [K/MPa]
-        /// </summary>
-        private double m_JouleThomsonCoefficient;
-
-        /// <summary>
-        /// Dynamic viscosity dv in [kg/(m·s)]
-        /// </summary>
-        private double m_DynamicViscosity;
-
-        /// <summary>
-        /// Kinematic viscosity kv in [m^2/s]
-        /// </summary>
-        private double m_KinematicViscosity;
-
-        /// <summary>
-        /// Thermal conductivity tc in [W/(m·K)]
-        /// </summary>
-        private double m_ThermalConductivity;
-
-        /// <summary>
-        /// Thermal diffusivity td in [um^2/s] 
-        /// </summary>
-        private double m_ThermalDiffusivity;
-
-        /// <summary>
-        /// Prandtl number pr
-        /// </summary>
-        private double m_PrandtlNumber;
-
-        /// <summary>
-        /// Surface tension st in [mN/m]
-        /// </summary>
-        private double m_SurfaceTension;
-
         #endregion Members
 
         #region Properties
 
+        /// <summary>
+        /// <inheritdoc cref="Properties.Pressure"/>
+        /// </summary>
         public PhysicalValue Pressure
         {
             get
             {
-                if (!m_AlreadyCalculated)
-                {
-                    m_Pressure = Calculate(Properties.Pressure);
-                    CheckPressure(new(m_Pressure, PhysicalUnits.Megapascal));
-                }
-                return new(m_Pressure, PhysicalUnits.Megapascal);
-            }
-        }
-
-        public PhysicalValue Temperature
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                {
-                    m_Temperature = Calculate(Properties.Temperature);
-                    CheckTemperature(new(m_Temperature, PhysicalUnits.Celsius));
-                }
-                return new(m_Temperature, PhysicalUnits.Celsius);
-            }
-        }
-
-        public PhysicalValue Density
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_Density = Calculate(Properties.Density);
-                return new(m_Density, PhysicalUnits.KilogramPerCubicMetre);
-            }
-        }
-        public PhysicalValue SurfaceTension
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_SurfaceTension = Calculate(Properties.SurfaceTension);
-                return new(m_SurfaceTension, PhysicalUnits.MillinewtonPerMetre);
-            }
-        }
-
-        public PhysicalValue SpecificVolume
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_Volume = Calculate(Properties.Volume);
-                return new(m_Volume, PhysicalUnits.CubicMetrePerKilogram);
+                var temperature = GetPropertyValue();
+                CheckPressure(temperature);
+                return temperature;
             }
         }
 
         /// <summary>
-        /// Kinematic viscosity in [m^2/s]
+        /// <inheritdoc cref="Properties.Temperature"/>
         /// </summary>
-        public PhysicalValue DynamicViscosity
+        public PhysicalValue Temperature
         {
             get
             {
-                if (!m_AlreadyCalculated)
-                    m_DynamicViscosity = Calculate(Properties.DynamicViscosity);
-                return new(m_DynamicViscosity, PhysicalUnits.KilogramPerMetreSecond);
+                var temperature = GetPropertyValue();
+                CheckTemperature(temperature);
+                return temperature;
             }
         }
 
-        public PhysicalValue KineticViscosity
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_KinematicViscosity = Calculate(Properties.KinematicViscosity);
-                return new(m_KinematicViscosity, PhysicalUnits.SquareMetrePerSecond);
-            }
-        }
+        /// <summary>
+        /// Saturation pressure in [MPa]
+        /// </summary>
+        public PhysicalValue SaturationPressure => CalculateSaturationPressure();
 
-        public int Region
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_Region = Calculate(Properties.Region);
-                return (int)m_Region;
-            }
-        }
+        /// <summary>
+        /// Saturation temperature in [°C]
+        /// </summary>
+        public PhysicalValue SaturationTemperature => CalculateSaturationTemperature();
 
-        public double SteamQuality
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_SteamQuality = Calculate(Properties.SteamQuality);
-                return m_SteamQuality;
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.Density"/>
+        /// </summary>
+        public PhysicalValue Density => GetPropertyValue();
 
-        public double PrandtlNumber
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_PrandtlNumber = Calculate(Properties.PrandtlNumber);
-                return m_PrandtlNumber;
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.SurfaceTension"/>
+        /// </summary>
+        public PhysicalValue SurfaceTension => GetPropertyValue();
 
-        public double CompressibilityFactor
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_CompressibilityFactor = Calculate(Properties.CompressibilityFactor);
-                return m_CompressibilityFactor;
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.Volume"/>
+        /// </summary>
+        public PhysicalValue SpecificVolume => GetPropertyValue();
 
-        public double IsentropicExponent
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_IsentropicExponent = Calculate(Properties.IsentropicExponent);
-                return m_IsentropicExponent;
-            }
-        }
 
-        public PhysicalValue SpeedOfSound
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_SpeedOfSound = Calculate(Properties.SpeedOfSound);
-                return new(m_SpeedOfSound, PhysicalUnits.MetrePerSecond);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.DynamicViscosity"/>
+        /// </summary>
+        public PhysicalValue DynamicViscosity => GetPropertyValue();
 
-        public PhysicalValue SpecificExergy
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_Exergy = Calculate(Properties.Exergy);
-                return new(m_Exergy, PhysicalUnits.KilojoulePerKilogram);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.KinematicViscosity"/>
+        /// </summary>
+        public PhysicalValue KineticViscosity => GetPropertyValue();
 
-        public PhysicalValue SpecificEnthalpy
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_Enthalpy = Calculate(Properties.Enthalpy);
-                return new(m_Enthalpy, PhysicalUnits.KilojoulePerKilogram);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.Region"/>
+        /// </summary>
+        public int Region => GetPropertyValue<int>();
 
-        public PhysicalValue SpecificInternalEnergy
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_InternalEnergy = Calculate(Properties.InternalEnergy);
-                return new(m_InternalEnergy, PhysicalUnits.KilojoulePerKilogram);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.SteamQuality"/>
+        /// </summary>
+        public double SteamQuality => GetPropertyValue<double>();
 
-        public PhysicalValue SpecificHelmholtzFreeEnergy
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_HelmholtzFreeEnergy = Calculate(Properties.HelmholtzFreeEnergy);
-                return new(m_HelmholtzFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.PrandtlNumber"/>
+        /// </summary>
+        public double PrandtlNumber => GetPropertyValue<double>();
 
-        public PhysicalValue SpecificGibbsFreeEnergy
-        {
-            get
-            {
-                if (!m_AlreadyCalculated)
-                    m_GibbsFreeEnergy = Calculate(Properties.GibbsFreeEnergy);
-                return new(m_GibbsFreeEnergy, PhysicalUnits.KilojoulePerKilogram);
-            }
-        }
+        /// <summary>
+        /// <inheritdoc cref="Properties.CompressibilityFactor"/>
+        /// </summary>
+        public double CompressibilityFactor => GetPropertyValue<double>();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.IsentropicExponent"/>
+        /// </summary>
+        public double IsentropicExponent => GetPropertyValue<double>();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.SpeedOfSound"/>
+        /// </summary>
+        public PhysicalValue SpeedOfSound => GetPropertyValue();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.Exergy"/>
+        /// </summary>
+        public PhysicalValue SpecificExergy => GetPropertyValue();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.Enthalpy"/>
+        /// </summary>
+        public PhysicalValue SpecificEnthalpy => GetPropertyValue();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.InternalEnergy"/>
+        /// </summary>
+        public PhysicalValue SpecificInternalEnergy => GetPropertyValue();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.HelmholtzFreeEnergy"/>
+        /// </summary>
+        public PhysicalValue SpecificHelmholtzFreeEnergy => GetPropertyValue();
+
+        /// <summary>
+        /// <inheritdoc cref="Properties.GibbsFreeEnergy"/>
+        /// </summary>
+        public PhysicalValue SpecificGibbsFreeEnergy => GetPropertyValue();
 
         #endregion Properties
 
         #region Constructor
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -410,19 +188,80 @@ namespace Rca.Physical.If97
             }
             else
                 throw new AggregateException("Can not get assembly location");
+
+            m_PropertyInfos = new Dictionary<string, CalculationProperty>()
+            {
+                { nameof(Pressure),                    new(PhysicalUnits.Megapascal,             Properties.Pressure              )},
+                { nameof(Temperature),                 new(PhysicalUnits.Celsius,                Properties.Temperature           )},
+                { nameof(SaturationPressure),          new(PhysicalUnits.Megapascal,             Properties.NotDefined            )},
+                { nameof(SaturationTemperature),       new(PhysicalUnits.Celsius,                Properties.NotDefined            )},
+                { nameof(Density),                     new(PhysicalUnits.KilogramPerCubicMetre,  Properties.Density               )},
+                { nameof(SurfaceTension),              new(PhysicalUnits.MillinewtonPerMetre,    Properties.SurfaceTension        )},
+                { nameof(SpecificVolume),              new(PhysicalUnits.CubicMetrePerKilogram,  Properties.Volume                )},
+                { nameof(DynamicViscosity),            new(PhysicalUnits.KilogramPerMetreSecond, Properties.DynamicViscosity      )},
+                { nameof(KineticViscosity),            new(PhysicalUnits.SquareMetrePerSecond,   Properties.KinematicViscosity    )},
+                { nameof(Region),                      new(PhysicalUnits.None,                   Properties.Region                )},
+                { nameof(SteamQuality),                new(PhysicalUnits.None,                   Properties.SteamQuality          )},
+                { nameof(PrandtlNumber),               new(PhysicalUnits.None,                   Properties.PrandtlNumber         )},
+                { nameof(CompressibilityFactor),       new(PhysicalUnits.None,                   Properties.CompressibilityFactor )},
+                { nameof(IsentropicExponent),          new(PhysicalUnits.None,                   Properties.IsentropicExponent    )},
+                { nameof(SpeedOfSound),                new(PhysicalUnits.MetrePerSecond,         Properties.SpeedOfSound          )},
+                { nameof(SpecificExergy),              new(PhysicalUnits.KilojoulePerKilogram,   Properties.Exergy                )},
+                { nameof(SpecificEnthalpy),            new(PhysicalUnits.KilojoulePerKilogram,   Properties.Enthalpy              )},
+                { nameof(SpecificInternalEnergy),      new(PhysicalUnits.KilojoulePerKilogram,   Properties.InternalEnergy        )},
+                { nameof(SpecificHelmholtzFreeEnergy), new(PhysicalUnits.KilojoulePerKilogram,   Properties.HelmholtzFreeEnergy   )},
+                { nameof(SpecificGibbsFreeEnergy),     new(PhysicalUnits.KilojoulePerKilogram,   Properties.GibbsFreeEnergy       )}
+            };
         }
+
         #endregion Constructor
 
         #region Public services
 
         /// <summary>
         /// Update the water condition, with new value for temperature.
-        /// The pressure is set to standard atmosphere (1 atm).
         /// </summary>
         /// <param name="temperature">New temperature value</param>
         public void UpdateT(PhysicalValue temperature)
         {
-            UpdatePT(temperature, Rca.Physical.Helpers.Pressure.FromStandardAtmosphere(1));
+            CheckTemperature(temperature);
+            ResetCalculationStates();
+
+            var parameterNumber = m_PropertyInfos[nameof(Temperature)].ParameterNumber;
+
+            if (parameterNumber != 0)
+                UpdateParameter(parameterNumber, temperature.ValueAs(PhysicalUnits.Celsius), nameof(Temperature));
+            else
+            {
+                ResetParameterAssignment();
+                m_Parameter1 = double.NaN;
+                m_Parameter2 = double.NaN;
+                m_PropertyInfos[nameof(Temperature)].Value = temperature.ValueAs(PhysicalUnits.Celsius);
+                m_PropertyInfos[nameof(Temperature)].IsCalculated = true;
+            }
+        }
+
+        /// <summary>
+        /// Update the water condition, with new value for pressure.
+        /// </summary>
+        /// <param name="pressure">New pressure value</param>
+        public void UpdateP(PhysicalValue pressure)
+        {
+            CheckPressure(pressure);
+            ResetCalculationStates();
+
+            var parameterNumber = m_PropertyInfos[nameof(Pressure)].ParameterNumber;
+
+            if (parameterNumber != 0)
+                UpdateParameter(parameterNumber, pressure.ValueAs(PhysicalUnits.Megapascal), nameof(Pressure));
+            else
+            {
+                ResetParameterAssignment();
+                m_Parameter1 = double.NaN;
+                m_Parameter2 = double.NaN;
+                m_PropertyInfos[nameof(Pressure)].Value = pressure.ValueAs(PhysicalUnits.Megapascal);
+                m_PropertyInfos[nameof(Pressure)].IsCalculated = true;
+            }
         }
 
         /// <summary>
@@ -434,9 +273,11 @@ namespace Rca.Physical.If97
         {
             CheckPressure(pressure);
             CheckTemperature(temperature);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
-            UpdateParameter(2, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), nameof(Pressure));
+            UpdateParameter(2, temperature.ValueAs(PhysicalUnits.Celsius), nameof(Temperature));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seupt;
         }
@@ -449,9 +290,11 @@ namespace Rca.Physical.If97
         public void UpdatePV(PhysicalValue pressure, PhysicalValue specificVolume)
         {
             CheckPressure(pressure);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
-            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), ref m_Volume);
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), nameof(Pressure));
+            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), nameof(SpecificVolume));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seupv;
         }
@@ -464,9 +307,11 @@ namespace Rca.Physical.If97
         public void UpdateTV(PhysicalValue temperature, PhysicalValue specificVolume)
         {
             CheckTemperature(temperature);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
-            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), ref m_Volume);
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), nameof(Temperature));
+            UpdateParameter(2, specificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram), nameof(SpecificVolume));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seutv;
         }
@@ -479,9 +324,11 @@ namespace Rca.Physical.If97
         public void UpdateTX(PhysicalValue temperature, double steamQuality)
         {
             CheckTemperature(temperature);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
-            UpdateParameter(2, steamQuality, ref m_SteamQuality);
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), nameof(Temperature));
+            UpdateParameter(2, steamQuality, nameof(SteamQuality));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seutx;
         }
@@ -494,9 +341,11 @@ namespace Rca.Physical.If97
         public void UpdatePX(PhysicalValue pressure, double steamQuality)
         {
             CheckPressure(pressure);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
-            UpdateParameter(2, steamQuality, ref m_SteamQuality);
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), nameof(Pressure));
+            UpdateParameter(2, steamQuality, nameof(SteamQuality));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seupx;
         }
@@ -509,9 +358,11 @@ namespace Rca.Physical.If97
         public void UpdatePH(PhysicalValue pressure, PhysicalValue enthalpy)
         {
             CheckPressure(pressure);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), ref m_Pressure);
-            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), ref m_Enthalpy);
+            UpdateParameter(1, pressure.ValueAs(PhysicalUnits.Megapascal), nameof(Pressure));
+            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), nameof(SpecificEnthalpy));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seuph;
         }
@@ -524,11 +375,11 @@ namespace Rca.Physical.If97
         public void UpdateTH(PhysicalValue temperature, PhysicalValue enthalpy)
         {
             CheckTemperature(temperature);
+            ResetParameterAssignment();
+            ResetCalculationStates();
 
-            m_AlreadyCalculated = false;
-
-            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), ref m_Temperature);
-            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), ref m_Enthalpy);
+            UpdateParameter(1, temperature.ValueAs(PhysicalUnits.Celsius), nameof(Temperature));
+            UpdateParameter(2, enthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram), nameof(SpecificEnthalpy));
 
             m_SeuIf97Function_Handler = SeuIf97Wrapper.seuth;
         }
@@ -537,7 +388,7 @@ namespace Rca.Physical.If97
 
         #region Private services
 
-        private void UpdateParameter(int parameterNumber, double value, ref double parameterMember)
+        private void UpdateParameter(int parameterNumber, double value, string propertyName)
         {
             switch (parameterNumber)
             {
@@ -551,25 +402,88 @@ namespace Rca.Physical.If97
                     throw new ArgumentOutOfRangeException($"Only parameter 1 and 2 are available. Parameter {parameterNumber} does not exist.");
             }
 
-            parameterMember = value;
+            m_PropertyInfos[propertyName].Value = value;
+            m_PropertyInfos[propertyName].ParameterNumber = parameterNumber;
+            m_PropertyInfos[propertyName].IsCalculated = true;
         }
 
-        private double Calculate(Properties property)
+        private void ResetCalculationStates()
         {
+            Parallel.ForEach(m_PropertyInfos, p => p.Value.IsCalculated = false);
+        }
+
+        private void ResetParameterAssignment()
+        {
+            Parallel.ForEach(m_PropertyInfos, p => p.Value.ParameterNumber = 0);
+            m_SeuIf97Function_Handler = null;
+        }
+
+        private CalculationProperty GetPropertyInfos([CallerMemberName]string propertyName = "")
+        {
+            return m_PropertyInfos[propertyName];
+        }
+
+        private T GetPropertyValue<T>([CallerMemberName] string propertyName = "") where T : IConvertible
+        {
+            var value = GetPropertyValue(propertyName);
+
+            if (value.Unit == PhysicalUnits.None)
+                return (T)Convert.ChangeType(value.Value, typeof(T));
+            else
+                throw new ArgumentException($"Calculated value have a specific unit ({value.Unit}) and can not pass without unit.");
+        }
+
+        private  PhysicalValue GetPropertyValue([CallerMemberName] string propertyName = "")
+        {
+            var propertyInfo = GetPropertyInfos(propertyName);
+
+            if (!propertyInfo.IsCalculated)
+                CalculateProperty(propertyName);
+
+            return new(GetPropertyInfos(propertyName).Value, propertyInfo.SeuIf97Unit);
+        }
+
+        private void CalculateProperty([CallerMemberName]string propertyName = "")
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                throw new ArgumentNullException(nameof(propertyName), "Property name must be set.");
+
             if (m_SeuIf97Function_Handler is not null)
             {
-                var result = m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, property);
+                var result = m_SeuIf97Function_Handler(m_Parameter1, m_Parameter2, m_PropertyInfos[propertyName].SeuIf97PropertyId);
 
                 if (double.IsNormal(result))
                 {
-                    m_AlreadyCalculated = true;
-                    return result;
+                    m_PropertyInfos[propertyName].IsCalculated = true;
+                    m_PropertyInfos[propertyName].Value = result;
                 }
                 else
                     throw new ArgumentException("Calculation returns with error, result value is: " + result);
             }
             else
                 throw new ArgumentNullException(nameof(m_SeuIf97Function_Handler), "Before the calculation, a parameter update is required.");
+        }
+
+        private PhysicalValue CalculateSaturationPressure([CallerMemberName] string propertyName = "")
+        {
+            var temperature = Temperature.ValueAs(PhysicalUnits.Celsius);
+            var pressure = SeuIf97Wrapper.seutx(temperature, 1, Properties.Pressure);
+
+            m_PropertyInfos[propertyName].Value = pressure;
+            m_PropertyInfos[propertyName].IsCalculated = true;
+
+            return new(pressure, PhysicalUnits.Megapascal);
+        }
+
+        private PhysicalValue CalculateSaturationTemperature([CallerMemberName] string propertyName = "")
+        {
+            var pressure = Pressure.ValueAs(PhysicalUnits.Megapascal);
+            var temperature = SeuIf97Wrapper.seupx(pressure, 1, Properties.Temperature);
+
+            m_PropertyInfos[propertyName].Value = temperature;
+            m_PropertyInfos[propertyName].IsCalculated = true;
+
+            return new(temperature, PhysicalUnits.Celsius);
         }
 
         private void CheckPressure(PhysicalValue pressure)

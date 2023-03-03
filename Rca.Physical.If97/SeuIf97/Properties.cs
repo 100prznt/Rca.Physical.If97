@@ -12,6 +12,7 @@ namespace Rca.Physical.If97.SeuIf97
     /// </summary>
     internal enum Properties
     {
+        NotDefined = -1,
         /// <summary>
         /// Pressure p in [MPa]
         /// </summary>
