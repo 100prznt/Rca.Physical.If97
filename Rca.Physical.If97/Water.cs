@@ -189,6 +189,18 @@ namespace Rca.Physical.If97
             else
                 throw new AggregateException("Can not get assembly location");
 
+
+
+            //O N L Y   F O R   D E B U G I N G
+            var logpath = @"D:/Temp/debuginfo_dllpath.txt";
+            if (Directory.Exists(Path.GetDirectoryName(logpath)) & !File.Exists(logpath))
+            {
+                using var sw = new StreamWriter(logpath);
+                sw.WriteLine($"SetDllDirectory({path})");
+            }
+
+
+
             m_PropertyInfos = new Dictionary<string, CalculationProperty>()
             {
                 { nameof(Pressure),                    new(PhysicalUnits.Megapascal,             Properties.Pressure              )},
@@ -445,6 +457,20 @@ namespace Rca.Physical.If97
 
         private void CalculateProperty([CallerMemberName]string propertyName = "")
         {
+            //O N L Y   F O R   D E B U G I N G
+            var logpath = @"D:/Temp/debuginfo.txt";
+            if (Directory.Exists(Path.GetDirectoryName(logpath)) &! File.Exists(logpath))
+            {
+                using var sw = new StreamWriter(logpath);
+                sw.WriteLine(nameof(CalculateProperty));
+                sw.WriteLine("System.AppContext.BaseDirectory = " + System.AppContext.BaseDirectory);
+                sw.WriteLine("AppDomain.CurrentDomain.BaseDirectory = " + AppDomain.CurrentDomain.BaseDirectory);
+                sw.WriteLine("Directory.GetCurrentDirectory() = " + Directory.GetCurrentDirectory());
+                sw.WriteLine("Environment.CurrentDirectory = " + Environment.CurrentDirectory);
+            }
+
+
+
             if (string.IsNullOrEmpty(propertyName))
                 throw new ArgumentNullException(nameof(propertyName), "Property name must be set.");
 
