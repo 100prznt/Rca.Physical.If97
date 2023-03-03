@@ -63,9 +63,19 @@ namespace Rca.Physical.If97.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
         /// </summary>
-        internal static byte[] libseuif97 {
+        internal static byte[] libseuif97_x64 {
             get {
-                object obj = ResourceManager.GetObject("libseuif97", resourceCulture);
+                object obj = ResourceManager.GetObject("libseuif97_x64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        internal static byte[] libseuif97_x86 {
+            get {
+                object obj = ResourceManager.GetObject("libseuif97_x86", resourceCulture);
                 return ((byte[])(obj));
             }
         }

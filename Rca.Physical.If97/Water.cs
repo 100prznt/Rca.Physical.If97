@@ -182,28 +182,10 @@ namespace Rca.Physical.If97
         {
             if (!m_SeuIf97DllIsInitialized)
             {
-                DllHelper.ExtractEmbeddedDlls("libseuif97.dll", Properties.Resources.libseuif97);
-
-                //var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                //if (path is not null)
-                //{
-                //    path = Path.Combine(path, "Dependencies", Environment.Is64BitProcess ? "x64" : "x86");
-                //    if (!SetDllDirectory(path))
-                //        throw new System.ComponentModel.Win32Exception("Can not set DLL directory");
-                //}
-                //else
-                //    throw new AggregateException("Can not get assembly location");
-
-
-
-                ////O N L Y   F O R   D E B U G I N G
-                //var logpath = @"D:/Temp/debuginfo_dllpath.txt";
-                //if (Directory.Exists(Path.GetDirectoryName(logpath)) & !File.Exists(logpath))
-                //{
-                //    using var sw = new StreamWriter(logpath);
-                //    sw.WriteLine($"SetDllDirectory({path})");
-                //}
-
+                if (Environment.Is64BitProcess)
+                    DllHelper.ExtractEmbeddedDlls("libseuif97.dll", Properties.Resources.libseuif97_x64);
+                else
+                    DllHelper.ExtractEmbeddedDlls("libseuif97.dll", Properties.Resources.libseuif97_x86);
             }
 
             m_PropertyInfos = new Dictionary<string, CalculationProperty>()
@@ -462,23 +444,6 @@ namespace Rca.Physical.If97
 
         private void CalculateProperty([CallerMemberName]string propertyName = "")
         {
-            //O N L Y   F O R   D E B U G I N G
-            var logpath = @"D:/Temp/debuginfo.txt";
-            if (Directory.Exists(Path.GetDirectoryName(logpath)) &! File.Exists(logpath))
-            {
-                using var sw = new StreamWriter(logpath);
-                sw.WriteLine(nameof(CalculateProperty));
-                sw.WriteLine("System.AppContext.BaseDirectory = " + System.AppContext.BaseDirectory);
-                sw.WriteLine("AppDomain.CurrentDomain.BaseDirectory = " + AppDomain.CurrentDomain.BaseDirectory);
-                sw.WriteLine("Directory.GetCurrentDirectory() = " + Directory.GetCurrentDirectory());
-                sw.WriteLine("Environment.CurrentDirectory = " + Environment.CurrentDirectory);
-                sw.WriteLine("Assembly.GetExecutingAssembly().Location = " + Assembly.GetExecutingAssembly().Location);
-                sw.WriteLine("Assembly.GetAssembly(typeof(Water)).Location = " + Assembly.GetAssembly(typeof(Water)).Location);
-
-            }
-
-
-
             if (string.IsNullOrEmpty(propertyName))
                 throw new ArgumentNullException(nameof(propertyName), "Property name must be set.");
 
