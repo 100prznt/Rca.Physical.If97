@@ -467,7 +467,8 @@ namespace Rca.Physical.If97
                 sw.WriteLine("AppDomain.CurrentDomain.BaseDirectory = " + AppDomain.CurrentDomain.BaseDirectory);
                 sw.WriteLine("Directory.GetCurrentDirectory() = " + Directory.GetCurrentDirectory());
                 sw.WriteLine("Environment.CurrentDirectory = " + Environment.CurrentDirectory);
-                sw.WriteLine("Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) = " + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                sw.WriteLine("Assembly.GetExecutingAssembly().Location = " + Assembly.GetExecutingAssembly().Location);
+                sw.WriteLine("Assembly.GetAssembly(typeof(Water)).Location = " + Assembly.GetAssembly(typeof(Water)).Location);
 
             }
 
