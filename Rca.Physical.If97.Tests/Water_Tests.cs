@@ -18,7 +18,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             var density = water.Density.ValueAs(PhysicalUnits.KilogramPerCubicMetre);
 
@@ -31,7 +31,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             //Referenc value from: https://thermofluidprop.com/stoffwerte-online/fluid-property-calculator
             Assert.AreEqual(6.12663, water.PrandtlNumber, 1E-2);
@@ -42,7 +42,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             //Referenc value from: https://thermofluidprop.com/stoffwerte-online/fluid-property-calculator
             Assert.AreEqual(1, water.Region);
@@ -53,7 +53,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             var volume = water.SpecificVolume.ValueAs(PhysicalUnits.CubicMetrePerKilogram);
 
@@ -66,7 +66,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             var viscosity = water.DynamicViscosity.ValueAs(PhysicalUnits.PascalSecond);
 
@@ -79,7 +79,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             var viscosity = water.KineticViscosity.ValueAs(PhysicalUnits.SquareMetrePerSecond);
 
@@ -92,7 +92,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePT(Pressure.FromBar(1), ThermodynamicTemperature.FromCelsius(25));
+            water.UpdatePT(Pressure.FromBars(1), ThermodynamicTemperature.FromCelsius(25));
 
             var enthalpy = water.SpecificEnthalpy.ValueAs(PhysicalUnits.KilojoulePerKilogram);
 
@@ -118,7 +118,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdatePX(Pressure.FromStandardAtmosphere(1), 1);
+            water.UpdatePX(Pressure.FromStandardAtmospheres(1), 1);
 
             var saturationTemperature = water.Temperature.ValueAs(PhysicalUnits.Celsius);
 
@@ -147,7 +147,7 @@ namespace Rca.Physical.If97.Tests
         {
             var water = new Water();
 
-            water.UpdateP(Pressure.FromStandardAtmosphere(1));
+            water.UpdateP(Pressure.FromStandardAtmospheres(1));
 
             var saturationTemperature = water.SaturationTemperature.ValueAs(PhysicalUnits.Celsius);
 
@@ -161,7 +161,7 @@ namespace Rca.Physical.If97.Tests
             var water = new Water();
 
             //initial conditions
-            water.UpdateTH(ThermodynamicTemperature.FromCelsius(100), SpecificEnergy.FromJoulePerKilogram(1));
+            water.UpdateTH(ThermodynamicTemperature.FromCelsius(100), SpecificEnergy.FromJoulePerKilograms(1));
 
             //updated conditions
             water.UpdateT(ThermodynamicTemperature.FromCelsius(25));
@@ -179,10 +179,10 @@ namespace Rca.Physical.If97.Tests
             var water = new Water();
 
             //initial conditions
-            water.UpdateTH(ThermodynamicTemperature.FromCelsius(100), SpecificEnergy.FromJoulePerKilogram(1));
+            water.UpdateTH(ThermodynamicTemperature.FromCelsius(100), SpecificEnergy.FromJoulePerKilograms(1));
 
             //updated conditions
-            water.UpdateP(Pressure.FromStandardAtmosphere(1));
+            water.UpdateP(Pressure.FromStandardAtmospheres(1));
 
             var saturationTemperature = water.SaturationTemperature.ValueAs(PhysicalUnits.Celsius);
 
