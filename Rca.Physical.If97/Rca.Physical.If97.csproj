@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rca.Physical" Version="1.0.43" />
+    <PackageReference Include="Rca.Physical" Version="1.0.48" />
   </ItemGroup>
   
   <ItemGroup>
