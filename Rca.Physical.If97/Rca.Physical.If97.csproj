@@ -8,7 +8,7 @@
     <Authors>Ruemmler, Elias</Authors>
     <Description>Property library for water and steam according to the industrial formulation IAPWS-IF97.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2023 RC-Art Solutions (Ruemmler, Elias)</Copyright>
+    <Copyright>Copyright © 2025 RC-Art Solutions (Ruemmler, Elias)</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/100prznt/Rca.Physical.If97</RepositoryUrl>
@@ -16,9 +16,9 @@
     <PackageTags>water-properties; iapws-if97; thermodynamics</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
-    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
